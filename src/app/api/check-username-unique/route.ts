@@ -2,7 +2,7 @@ import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/models/User";
 import { z } from "zod";
 import { usernameValidation } from "@/schemas/signUpSchema";
-import { success } from "zod/v4";
+
 
 
 
@@ -11,6 +11,7 @@ const UsernameQuerySchema = z.object({
 })
 
 export async function GET(request: Request){
+       
     await dbConnect()
     try{
         const {searchParams}=new URL(request.url)

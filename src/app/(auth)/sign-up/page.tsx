@@ -42,8 +42,9 @@ export default function SignUpForm() {
         setisCheckingUsername(true)
         setUsernameMessage('')
         try{
-          const response= await axios.get(`/api/check-username-unique?username=${debouncedUsername}`)
-          setUsernameMessage(response.data.message)
+          const response= await axios.get(`/api/check-username-unique?username=${username}`)
+          let message = response.data.message
+          setUsernameMessage(message)
         }catch(error){
           const axiosError =error as AxiosError<ApiResponse>
           setUsernameMessage(
@@ -102,6 +103,10 @@ export default function SignUpForm() {
                     }} />
                     
                   </FormControl>
+                    {isCheckingUsername && <Loader2 className="animate-spin"/>}
+                    <p className={`text-sm ${usernameMessage==="Username is unique" ?'text-green-500':'text-red-500'}`}>test {usernameMessage}</p>
+
+
                   <FormMessage />
                 </FormItem>
               )}
@@ -130,7 +135,8 @@ export default function SignUpForm() {
                     <Input type="password" placeholder="password" {...field} 
                      />
                   </FormControl>
-                  {isCheckingUsername && <Loader2 className="animate-spin"/>}
+                  
+
 
                   <FormMessage />
                 </FormItem>

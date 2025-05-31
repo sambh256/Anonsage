@@ -24,7 +24,7 @@ export async function GET(request: Request){
             const usernameErrors =result.error.format().username?._errors ||[]
             return Response.json({
                 success:false,
-                message:'Invalid query parameter'
+                message:'Username is invalid '
             },{status:400})
         }
         const {username}=result.data
@@ -34,14 +34,14 @@ export async function GET(request: Request){
                 success:false,
                 message:'Username is already taken'
             },{status:400})
-        }else{
+        }
             return Response.json({
                 success:true,
-                message:'Username is available'
+                message:'Username is unique'
             },{status:200})
 
 
-        }
+        
 
 
 

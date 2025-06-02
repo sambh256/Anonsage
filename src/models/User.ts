@@ -3,6 +3,7 @@ import { Schema,Document } from "mongoose";
 import { StringDecoder } from "string_decoder";
 
 export interface Message extends Document{
+    _id: string;
     content:string;
     createdAt:Date
 }

@@ -37,7 +37,9 @@ export const authOptions:NextAuthOptions={
                     }
                     
                 }catch(err:any){
-                    throw new Error(err)
+                    console.error("Authorize error:", err);
+                    throw new Error(err?.message || "Authorization failed");
+
                 }
             }
         })

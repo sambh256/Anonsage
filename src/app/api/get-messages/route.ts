@@ -3,7 +3,7 @@ import { AuthOptions } from "next-auth";
 import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/models/User";
 import { User } from "next-auth";
-import { authOptions } from "../sign-up/auth/[...nexthauth]/options";
+import { authOptions } from "../auth/[...nextauth]/options";
 import mongoose, { Mongoose } from "mongoose";
 
 

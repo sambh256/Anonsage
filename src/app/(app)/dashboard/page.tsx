@@ -13,6 +13,7 @@ import { useSession } from 'next-auth/react'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
+import { Controller } from 'react-hook-form'
 
 const page=()=> {
   const [messages,setmessages]=useState<Message[]>([])
@@ -25,8 +26,12 @@ const page=()=> {
   const {data:session}=useSession()
   
   const form=useForm({
-    resolver:zodResolver(acceptMessageSchema)
-  })
+  resolver: zodResolver(acceptMessageSchema),
+  defaultValues: {
+    acceptMessage: true  // or whatever default makes sense
+  }
+})
+
   const {register,watch,setValue}=form
   const acceptMessages= watch('acceptMessage')
 
@@ -83,18 +88,19 @@ const page=()=> {
 
     }
   }
-  const {username}=session?.user as User
+  if(!session||!session.user){
+    return <div>Please login</div>
+  }
+  const {username}=session.user as User
   const baseUrl=`${window.location.protocol}//${window.location.host}`
-  const profileUrl=`${baseUrl}/u/{username}`
+  const profileUrl=`${baseUrl}/u/${username}`
 
   const copyToclipboard=()=>{
     navigator.clipboard.writeText(profileUrl)
     toast('profile url has been copied to clipboard')
   }
 
-  if(!session||!session.user){
-    return <div>Please login</div>
-  }
+  
 
   return (
     <div className="my-8 mx-4 md:mx-8 lg:mx-auto p-6 bg-white rounded w-full max-w-6xl">
@@ -114,15 +120,33 @@ const page=()=> {
       </div>
 
       <div className="mb-4">
-        <Switch
-          {...register('acceptMessage')}
-          checked={acceptMessages}
-          onCheckedChange={handleSwitchChange}
-          disabled={isSwitchLoading}
+        
+        <Controller
+          name="acceptMessage"
+          control={form.control}
+          render={({ field }) => (
+            <div className="flex items-center">
+              <Switch
+                checked={field.value}
+                onCheckedChange={async (newValue) => {
+                  field.onChange(newValue); // update RHF state
+                  try {
+                    const response = await axios.post<ApiResponse>('/api/accept-messages', {
+                      acceptMessages: newValue,
+                    });
+                    toast(response.data.message);
+                  } catch (error) {
+                    toast('Error');
+                  }
+                }}
+                disabled={isSwitchLoading}
+              />
+              <span className="ml-2">
+                Accept Messages: {field.value ? 'On' : 'Off'}
+              </span>
+            </div>
+          )}
         />
-        <span className="ml-2">
-          Accept Messages: {acceptMessages ? 'On' : 'Off'}
-        </span>
       </div>
       <Separator />
 

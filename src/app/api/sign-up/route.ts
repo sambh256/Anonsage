@@ -31,9 +31,12 @@ export async function POST(request:Request){
             }else{
                 const hasedPassword = await bcrypt.hash(password,10)
                 existingUserByEmail.password = hasedPassword;
+                existingUserByEmail.username=username;
                 existingUserByEmail.verifyCode=verifyCode;
                 existingUserByEmail.verifyCodeExpiry=new Date(Date.now()+3600000)
-                await existingUserByEmail.save()  
+                await existingUserByEmail.save()
+                const updatedUser = await existingUserByEmail.save();
+                console.log("✅ Updated user:", updatedUser);  
             }
         }else{
             const hasedPassword=await bcrypt.hash(password,10)

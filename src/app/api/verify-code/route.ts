@@ -7,18 +7,25 @@ export async function POST(request: Request){
     await dbConnect()
     try{
         const{username,code}= await request.json()
+        console.log("Received:", {username,code});
+
         const decodedusername=decodeURIComponent(username)
+        console.log("decoded: ",{decodedusername});
         const user =await UserModel.findOne({username:decodedusername})
+        console.log("databse: ",{user});
         if(!user){
             return Response.json({
             success: false,
             message:"Error verifying message"
         },{status:400})
         }else{
-            const isCodeValid=user.verifyCode===code
+            console.log({code});
+            
+            const isCodeValid=(username.verifyCode==code)
             const isCodeNotExpired=new Date(user.verifyCodeExpiry)>new Date()
+            console.log("code: ",{isCodeValid,isCodeNotExpired});
             if(isCodeNotExpired&&isCodeValid){
-                user.isVerified=true,
+                user.isVerified=true;
                 await user.save()
                 return Response.json({
                 success: true,
@@ -27,14 +34,14 @@ export async function POST(request: Request){
 
 
             }
-            if(isCodeNotExpired){
+            if(!isCodeNotExpired){
                 return Response.json({
                 success: false,
                 message:"Code has expired"
                 },{status:200})
 
             }
-            else if(isCodeValid){
+            else if(!isCodeValid){
                 return Response.json({
                 success: false,
                 message:"Code is wrong"

@@ -2,8 +2,11 @@ import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/models/User";
 import { z } from "zod";
 import { usernameValidation } from "@/schemas/signUpSchema";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export async function POST(request: Request){
+    const router = useRouter()
     await dbConnect()
     try{
         const{username,code}= await request.json()
@@ -21,7 +24,9 @@ export async function POST(request: Request){
         }else{
             console.log({code});
             
-            const isCodeValid=(username.verifyCode==code)
+            const isCodeValid=(user.verifyCode==code)
+            const dbcode=user.verifyCode
+            console.log("db ",{dbcode});
             const isCodeNotExpired=new Date(user.verifyCodeExpiry)>new Date()
             console.log("code: ",{isCodeValid,isCodeNotExpired});
             if(isCodeNotExpired&&isCodeValid){
@@ -31,6 +36,7 @@ export async function POST(request: Request){
                 success: true,
                 message:"User verified successfully"
                 },{status:200})
+                
 
 
             }

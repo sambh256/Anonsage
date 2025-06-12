@@ -31,23 +31,30 @@ export default function SignInForm() {
       password:''
     }
   })
+  const { setError } = form;
 
 
  
 
   const onSubmit =async(data: z.infer<typeof signInSchema>)=>{
+    setisSubmitting(true);
     const result=await signIn('credentials',{
         redirect:false,
         identifier: data.identifier,
         password:data.password
     })
     if(result?.error){
+      setError("password", {
+      type: "manual",
+      message: "Wrong password or email"
+    });
         toast("Login failed")
     }if(result?.url){
         router.replace('/dashboard')
 
         
     }
+    setisSubmitting(false);
   }
 
 

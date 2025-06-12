@@ -57,7 +57,7 @@ const MessageCard= ({message,onMessageDelete}:MessageCardProps)=>{
                 <CardTitle>{message.content}</CardTitle>
                 <AlertDialog>
                     <AlertDialogTrigger asChild>
-                        <Button variant="outline">Show Dialog</Button>
+                        <Button variant="outline">Delete</Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                         <AlertDialogHeader>

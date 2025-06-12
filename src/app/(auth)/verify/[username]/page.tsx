@@ -16,9 +16,12 @@ function VerifyAccount() {
     const router = useRouter()
     const params = useParams<{username:string}>()
     const form  = useForm({
-        resolver:zodResolver(verifySchema),
-        
-      })
+      resolver: zodResolver(verifySchema),
+      defaultValues: {
+        code: "",  
+      }
+    });
+
     const onSubmit = async (data:z.infer<typeof verifySchema>) =>{
         try{
           console.log("Username:", params.username);
@@ -32,8 +35,12 @@ function VerifyAccount() {
                 
                 
           })
-            toast("Success")
-            router.replace('/sign-in')
+            if (response.data.success) {
+              toast.success("Account verified successfully!")
+              router.replace('/sign-in')
+            } else {
+              toast.error(response.data.message || "Verification failed")
+            }
         } catch(error){
             console.error("Error in signup of user",error)
                   const axiosError =error as AxiosError<ApiResponse>

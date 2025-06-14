@@ -1,58 +1,83 @@
-# 💬 Mystery Message – Anonymous Feedback Platform
+# 🌐 True Feedback - Anonymous Feedback Platform
 
-A full-stack web application built with **Next.js**, **TypeScript**, **MongoDB**, and **NextAuth.js**. It allows users to register, verify their account via email using **Resend**, and receive anonymous feedback from others.
+A modern full-stack web app built with **Next.js**, providing a secure, verified, and anonymous platform for users to send and receive feedback.
 
----
-
-## 📚 Table of Contents
-
-- [Features](#-features)
-- [Tech Stack](#-tech-stack)
-- [Getting Started](#-getting-started)
-  - [Clone the Repository](#1-clone-the-repository)
-  - [Install Dependencies](#2-install-dependencies)
-  - [Environment Variables](#3-create-a-envlocal-file)
-  - [Run the App](#4-start-the-development-server)
-- [Folder Structure](#-folder-structure)
-- [Security](#️-security)
-- [Anonymous Messaging](#-anonymous-messaging)
-- [Scripts](#-scripts)
-- [Upcoming Features](#-upcoming-features)
-- [Contributing](#-contributing)
-- [License](#-license)
+![Next.js](https://img.shields.io/badge/Next.js-14-blue?logo=nextdotjs)
+![TypeScript](https://img.shields.io/badge/TypeScript-Strict-blue?logo=typescript)
+![MongoDB](https://img.shields.io/badge/Database-MongoDB-green?logo=mongodb)
+![TailwindCSS](https://img.shields.io/badge/Tailwind-CSS-blue?logo=tailwindcss)
+![Zod](https://img.shields.io/badge/Validation-Zod-purple?logo=zod)
+![Status](https://img.shields.io/badge/Status-Active-brightgreen)
+![License](https://img.shields.io/badge/License-MIT-success)
 
 ---
 
-## 🔧 Features
+## 📑 Table of Contents
 
-- 🔐 User Authentication (username/email + password)
-- 📧 Email verification via one-time code (Resend)
-- 🔁 Login with NextAuth credentials provider
-- 📨 Anonymous message submission
-- 🛡️ Protected dashboard with session-based auth
-- 🎨 Beautiful UI with Tailwind CSS
-- ✅ Form validation using Zod + React Hook Form
-- 🧪 Toast notifications using Sonner
-
----
-
-## 🧱 Tech Stack
-
-- **Frontend**: Next.js 14, TypeScript, Tailwind CSS
-- **Backend**: Next.js API Routes, MongoDB, Mongoose
-- **Auth**: NextAuth.js (Credentials Provider)
-- **Email**: Resend
-- **Validation**: Zod
-- **Form Handling**: React Hook Form
-- **Notifications**: Sonner
+- [🚀 Project Overview](#-project-overview)
+- [⚙️ Tech Stack](#️-tech-stack)
+- [📦 Features](#-features)
+- [🔐 Environment Variables](#-environment-variables)
+- [🛠️ Getting Started](#️-getting-started)
+- [📁 Project Structure](#-project-structure)
+- [🌍 Deployment](#-deployment)
+- [🧪 Testing](#-testing)
+- [📚 Resources](#-resources)
+- [📝 License](#-license)
+- [🤝 Contributing](#-contributing)
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Project Overview
 
-### 1. Clone the Repository
+**True Feedback** is a platform that lets users create accounts with email verification and receive anonymous feedback from others via a unique link. It is secure, responsive, and built with modern tools.
 
-```bash
-git clone https://github.com/your-username/mystery-message.git
-cd mystery-message
+---
 
+## ⚙️ Tech Stack
+
+| Tech             | Purpose                            |
+|------------------|-------------------------------------|
+| **Next.js**      | React Framework + SSR/SSG Support   |
+| **TypeScript**   | Type-safe JavaScript                |
+| **MongoDB**      | NoSQL Database                      |
+| **Mongoose**     | MongoDB ODM                         |
+| **Tailwind CSS** | Utility-first CSS                   |
+| **NextAuth.js**  | Authentication                      |
+| **Zod**          | Schema validation                   |
+| **Resend**       | Email delivery for verification     |
+| **Shadcn/UI**    | UI components                       |
+| **React Hook Form** | Form state management            |
+| **Axios**        | HTTP client for API requests        |
+
+---
+
+## 📦 Features
+
+- ✅ Sign up with email and username
+- 🔐 Email verification with **Resend**
+- ✅ Secure login using NextAuth
+- 🧾 Dashboard to manage received feedback
+- ✉️ Anonymous feedback submission
+- 🎨 Beautiful UI with **TailwindCSS** and **shadcn/ui**
+- ✅ Schema validation with **Zod**
+- 🛡️ Protected API routes
+- 📦 Modular folder structure
+
+---
+
+## 🔐 Environment Variables
+
+Create a `.env.local` file in the root directory and add:
+
+```env
+# MongoDB
+MONGODB_URI=your_mongodb_uri
+
+# NextAuth
+NEXTAUTH_SECRET=your_nextauth_secret
+NEXTAUTH_URL=http://localhost:3000
+
+# Resend
+RESEND_API_KEY=your_resend_api_key
+EMAIL_FROM=your_verified_email@example.com

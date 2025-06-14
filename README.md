@@ -1,83 +1,168 @@
-# 🌐 True Feedback - Anonymous Feedback Platform
+# 🔐 True Feedback – Next.js Authentication with Email Verification
 
-A modern full-stack web app built with **Next.js**, providing a secure, verified, and anonymous platform for users to send and receive feedback.
-
-![Next.js](https://img.shields.io/badge/Next.js-14-blue?logo=nextdotjs)
-![TypeScript](https://img.shields.io/badge/TypeScript-Strict-blue?logo=typescript)
-![MongoDB](https://img.shields.io/badge/Database-MongoDB-green?logo=mongodb)
-![TailwindCSS](https://img.shields.io/badge/Tailwind-CSS-blue?logo=tailwindcss)
-![Zod](https://img.shields.io/badge/Validation-Zod-purple?logo=zod)
-![Status](https://img.shields.io/badge/Status-Active-brightgreen)
-![License](https://img.shields.io/badge/License-MIT-success)
+True Feedback is a secure authentication system built using **Next.js**, **NextAuth**, **MongoDB**, and **Resend**. It allows users to sign up, receive a verification code by email, and log in only after verification.
 
 ---
 
 ## 📑 Table of Contents
 
-- [🚀 Project Overview](#-project-overview)
-- [⚙️ Tech Stack](#️-tech-stack)
-- [📦 Features](#-features)
-- [🔐 Environment Variables](#-environment-variables)
-- [🛠️ Getting Started](#️-getting-started)
-- [📁 Project Structure](#-project-structure)
-- [🌍 Deployment](#-deployment)
-- [🧪 Testing](#-testing)
-- [📚 Resources](#-resources)
-- [📝 License](#-license)
-- [🤝 Contributing](#-contributing)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Environment Variables](#environment-variables)
+- [Getting Started](#getting-started)
+- [Email Verification Flow](#email-verification-flow)
+- [API Reference](#api-reference)
+- [License](#license)
 
 ---
 
-## 🚀 Project Overview
+## ✅ Features
 
-**True Feedback** is a platform that lets users create accounts with email verification and receive anonymous feedback from others via a unique link. It is secure, responsive, and built with modern tools.
-
----
-
-## ⚙️ Tech Stack
-
-| Tech             | Purpose                            |
-|------------------|-------------------------------------|
-| **Next.js**      | React Framework + SSR/SSG Support   |
-| **TypeScript**   | Type-safe JavaScript                |
-| **MongoDB**      | NoSQL Database                      |
-| **Mongoose**     | MongoDB ODM                         |
-| **Tailwind CSS** | Utility-first CSS                   |
-| **NextAuth.js**  | Authentication                      |
-| **Zod**          | Schema validation                   |
-| **Resend**       | Email delivery for verification     |
-| **Shadcn/UI**    | UI components                       |
-| **React Hook Form** | Form state management            |
-| **Axios**        | HTTP client for API requests        |
+- Email verification using Resend
+- Authentication with NextAuth
+- Modern UI with TailwindCSS and shadcn/ui
+- Type safety with TypeScript
+- Schema validation using Zod
+- Secure backend API routes
 
 ---
 
-## 📦 Features
+## 🛠️ Tech Stack
 
-- ✅ Sign up with email and username
-- 🔐 Email verification with **Resend**
-- ✅ Secure login using NextAuth
-- 🧾 Dashboard to manage received feedback
-- ✉️ Anonymous feedback submission
-- 🎨 Beautiful UI with **TailwindCSS** and **shadcn/ui**
-- ✅ Schema validation with **Zod**
-- 🛡️ Protected API routes
-- 📦 Modular folder structure
+- **Frontend:** Next.js 14, React
+- **Backend:** Next.js API Routes
+- **Auth:** NextAuth.js
+- **Database:** MongoDB
+- **Email Service:** Resend
+- **Styling:** Tailwind CSS
+- **Validation:** Zod
+- **UI Components:** shadcn/ui
 
 ---
 
-## 🔐 Environment Variables
+## 📁 Project Structure
 
-Create a `.env.local` file in the root directory and add:
+```
+project-root/
+│
+├── app/
+│   └── sign-in/             # Sign-in page
+│   └── verify/              # Email verification page
+│
+├── components/              # Reusable UI components
+│
+├── lib/                     # Utility functions (auth, db, etc.)
+│
+├── pages/
+│   └── api/
+│       └── verify-code/     # API to verify code from email
+│
+├── public/                  # Static assets
+│
+├── schemas/                 # Zod validation schemas
+│
+├── styles/                  # Tailwind global styles
+│
+├── types/                   # TypeScript types
+│
+├── .env.example             # Sample environment file
+├── next.config.js           # Next.js config
+├── tailwind.config.js       # Tailwind config
+└── README.md
+```
+
+---
+
+## ⚙️ Environment Variables
+
+Create a `.env.local` file in the root and configure the following:
 
 ```env
-# MongoDB
-MONGODB_URI=your_mongodb_uri
+# MongoDB connection
+DATABASE_URL=mongodb+srv://<username>:<password>@cluster.mongodb.net/db
 
-# NextAuth
-NEXTAUTH_SECRET=your_nextauth_secret
+# Auth
+NEXTAUTH_SECRET=some-random-secret
 NEXTAUTH_URL=http://localhost:3000
 
-# Resend
-RESEND_API_KEY=your_resend_api_key
-EMAIL_FROM=your_verified_email@example.com
+# Resend Email API
+RESEND_API_KEY=your_resend_key
+EMAIL_FROM=your_verified@resend.dev
+```
+
+> ⚠️ **Never commit `.env.local` to GitHub. Add it to `.gitignore`.**
+
+---
+
+## 🚀 Getting Started
+
+1. **Clone the repository**
+
+```bash
+git clone https://github.com/your-username/true-feedback.git
+cd true-feedback
+```
+
+2. **Install dependencies**
+
+```bash
+npm install
+# or
+yarn install
+```
+
+3. **Setup environment**
+
+Copy `.env.example` to `.env.local` and update values.
+
+```bash
+cp .env.example .env.local
+```
+
+4. **Run the development server**
+
+```bash
+npm run dev
+```
+
+Visit [http://localhost:3000](http://localhost:3000) to view the app.
+
+---
+
+## 📧 Email Verification Flow
+
+1. User signs up with an email and username.
+2. System sends a 6-digit code via Resend.
+3. User enters the code on the `/verify` page.
+4. If valid, account is verified and user can sign in.
+
+---
+
+## 📡 API Reference
+
+### `POST /api/verify-code`
+
+**Body:**
+
+```json
+{
+  "username": "john_doe",
+  "code": "123456"
+}
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "message": "Account verified successfully"
+}
+```
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.

@@ -1,4 +1,4 @@
-# 🔐 True Feedback – Next.js Authentication with Email Verification
+# 🔐 Anonsage – Next.js Authentication with Email Verification
 
 True Feedback is a secure authentication system built using **Next.js**, **NextAuth**, **MongoDB**, and **Resend**. It allows users to sign up, receive a verification code by email, and log in only after verification.
 

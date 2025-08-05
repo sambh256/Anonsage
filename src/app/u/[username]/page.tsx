@@ -8,7 +8,6 @@ import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { CardHeader, CardContent, Card } from '@/components/ui/card';
-import { useCompletion } from 'ai/react';
 import {
   Form,
   FormControl,
@@ -38,15 +37,10 @@ export default function SendMessage() {
   const params = useParams<{ username: string }>();
   const username = params.username;
 
-  const {
-    complete,
-    completion,
-    isLoading: isSuggestLoading,
-    error,
-  } = useCompletion({
-    api: '/api/suggest-messages',
-    initialCompletion: initialMessageString,
-  });
+  // Replace useCompletion with simple state management
+  const [completion, setCompletion] = useState(initialMessageString);
+  const [isSuggestLoading, setIsSuggestLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
 
   const form = useForm<z.infer<typeof messageSchema>>({
     resolver: zodResolver(messageSchema),
@@ -68,10 +62,7 @@ export default function SendMessage() {
         username,
       });
 
-      toast(
-         response.data.message,
-        
-      );
+      toast(response.data.message);
       form.reset({ ...form.getValues(), content: '' });
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
@@ -82,11 +73,42 @@ export default function SendMessage() {
   };
 
   const fetchSuggestedMessages = async () => {
+    setIsSuggestLoading(true);
+    setError(null);
+    
     try {
-      complete('');
+      console.log('Fetching suggested messages...');
+      
+      const response = await fetch('/api/suggest-messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const suggestedMessages = await response.text();
+      console.log('Received messages:', suggestedMessages);
+      
+      // Validate that we have the separator
+      if (!suggestedMessages.includes(specialChar)) {
+        throw new Error('Invalid response format: no separator found');
+      }
+      
+      setCompletion(suggestedMessages);
+      
     } catch (error) {
       console.error('Error fetching messages:', error);
-      // Handle error appropriately
+      setError(error instanceof Error ? error : new Error('Unknown error'));
+      
+      // Fallback to default messages on error
+      setCompletion(initialMessageString);
+      toast('Failed to fetch suggested messages, showing default ones');
+    } finally {
+      setIsSuggestLoading(false);
     }
   };
 
@@ -136,7 +158,14 @@ export default function SendMessage() {
             className="my-4"
             disabled={isSuggestLoading}
           >
-            Suggest Messages
+            {isSuggestLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Loading...
+              </>
+            ) : (
+              'Suggest Messages'
+            )}
           </Button>
           <p>Click on any message below to select it.</p>
         </div>
@@ -146,7 +175,9 @@ export default function SendMessage() {
           </CardHeader>
           <CardContent className="flex flex-col space-y-4">
             {error ? (
-              <p className="text-red-500">{error.message}</p>
+              <p className="text-red-500">
+                Failed to load suggested messages. Using default ones.
+              </p>
             ) : (
               parseStringMessages(completion).map((message, index) => (
                 <Button
